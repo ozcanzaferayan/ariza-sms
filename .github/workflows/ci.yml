@@ -1,0 +1,37 @@
+name: Daily
+
+on: [push]
+  # schedule:
+  #   # Execute CI at Turkey Timezone 12:00 and 21:00 (UTC + 3)
+  #   - cron: '00 09,18 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: NPM ops
+      shell: bash
+      run: |
+        yarn
+        yarn start
+      env:
+        CI: true
+        MSISDN_RECEIVERS_DELIMITED_WITH_SEMICOLON: ${{ secrets.MSISDN_RECEIVERS_DELIMITED_WITH_SEMICOLON }}
+        MSISDN_SENDER: ${{ secrets.MSISDN_SENDER }}
+        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+        DISTRICT_NAME: ${{ secrets.DISTRICT_NAME }}
+        NEIGHBORHOOD_NAME: ${{ secrets.NEIGHBORHOOD_NAME }}
+    - name: Upload files
+      uses: actions/upload-artifact@v2
+      with:
+        name: sms
+        path: sms.txt
