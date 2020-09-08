@@ -1,9 +1,9 @@
 name: Daily
 
-on: [push]
-  # schedule:
-  #   # Execute CI at Turkey Timezone 12:00 and 21:00 (UTC + 3)
-  #   - cron: '00 09,18 * * *'
+on:
+  schedule:
+    # Execute CI at Turkey Timezone 12:00 and 21:00 (UTC + 3)
+    - cron: '00 09,18 * * *'
 
 jobs:
   build:

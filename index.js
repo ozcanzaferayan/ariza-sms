@@ -35,16 +35,18 @@ let createSmsText = ($, tables) => {
 
         let tdDistrict = trList.eq(1).find('td');
         let tdNeighborhood = trList.eq(2).find('td');
+        let tdStartDate = trList.eq(5).find('td');
         let tdEndDate = trList.eq(6).find('td');
 
         let district = tdDistrict.eq(2).text().trim();
         let neighbourhoods = tdNeighborhood.eq(2).text().trim();
+        let startDate = tdStartDate.eq(2).text().trim();
         let endDate = tdEndDate.eq(2).text().trim();
 
-        if (!district.includes(process.env.DISTRICT_NAME) || !neighbourhoods.includes(process.env.NEIGHBORHOOD_NAME)) {
+        if (!district.includes(process.env.DISTRICT_NAME)) {
             return;
         }
-        let failureObject = { district, neighbourhoods, endDate };
+        let failureObject = { district, neighbourhoods, startDate, endDate };
         smsTextArray.push(createSmsLine($, failureObject));
     });
     if (smsTextArray.length === 0) return "";
@@ -52,7 +54,7 @@ let createSmsText = ($, tables) => {
 }
 
 let createSmsLine = ($, failure) => {
-    return `${failure.district}\n${failure.neighbourhoods}\n${failure.endDate}`;
+    return `${failure.district}\n${failure.neighbourhoods}\n${failure.startDate}\n${failure.endDate}`;
 }
 
 let writeSmsToFile = (sms) => {
